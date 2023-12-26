@@ -7,7 +7,7 @@ on:
       - '*'
 
 env:
-  CI_JOB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
 
 jobs:
   converge:
@@ -25,7 +25,7 @@ jobs:
 
       - name: Log in to registry
         # This is where you will update the personal access token to GITHUB_TOKEN
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
+        run: echo "${{ secrets.CI_JOB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
 
       - name: Run echo
         run: |
@@ -36,4 +36,4 @@ jobs:
       - name: Run Build
         run: |
           . $(werf ci-env github --as-file)
-          werf export service --tag ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
+          werf export service --tag ghcr.io/Distributed-Lab-Testing/example-svc:$GITHUB_SHA
