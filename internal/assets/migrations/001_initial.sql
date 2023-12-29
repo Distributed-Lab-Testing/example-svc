@@ -2,8 +2,8 @@
 
 create table if not exists notes(
     id bigserial primary key,
-    note text,
-    created_at timestamp without time zone
+    content text not null,
+    created_at timestamp without time zone not null
 );
 
 -- +migrate Down
