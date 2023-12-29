@@ -1,0 +1,80 @@
+post:
+  tags:
+    - Notes
+  summary: Create notes
+  operationId: CreateNote
+  description: |
+    Writing data to the database.
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              type: object
+              $ref: '#/components/schemas/CreateNote'
+  responses:
+    '201':
+      description: Successfully created note
+get:
+  parameters:
+    - $ref: '#/components/parameters/sortingParam'
+    - $ref: '#/components/parameters/pageNumberParam'
+    - $ref: '#/components/parameters/pageLimitParam'
+    - name: 'filter[id]'
+      in: query
+      required: false
+      schema:
+        type: string
+        description: UUID of the user to filter logs
+        example: 550e8400-e29b-41d4-a716-446655440000
+    - name: 'filter[categories]'
+      in: query
+      required: false
+      schema:
+        type: string
+        description: Categories to filter by. Can handle either single or multiple values.
+        example: 'login attempts,database changes'
+    - name: 'filter[statuses]'
+      in: query
+      required: false
+      schema:
+        type: string
+        description: statuses to filter by. Can handle either single or multiple values.
+        example: '0,1'
+    - name: 'filter[after]'
+      in: query
+      required: false
+      schema:
+        type: string
+        description: timestamp to filter created dates after this value
+        example: '2023-09-15T07:59:36Z'
+    - name: 'filter[before]'
+      in: query
+      required: false
+      schema:
+        type: string
+        description: timestamp to filter created dates before this value
+        example: '2023-09-15T07:59:36Z'
+  tags:
+    - Notes
+  summary: Get notes
+  operationId: getNotes
+  description: |
+    Getting data to the database.
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: '#/components/schemas/Log'
