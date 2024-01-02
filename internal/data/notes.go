@@ -11,7 +11,7 @@ type NotesQ interface {
 	New() NotesQ
 	Insert(notes ...Note) ([]string, error)
 	Select(selector NoteSelector) ([]Note, error)
-	Get() (*Note, error)
+	Get() ([]Note, error)
 	Delete() error
 	UpdateContent(id int64, newContent string) error
 }

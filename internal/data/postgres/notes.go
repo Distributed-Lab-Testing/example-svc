@@ -1,7 +1,6 @@
 package postgres
 
 import (
-	"database/sql"
 	"fmt"
 
 	"github.com/Distributed-Lab-Testing/example-svc/internal/data"
@@ -50,14 +49,16 @@ func (q *notesQ) SelectWithPageParams(pageParams pgdb.OffsetPageParams) ([]data.
 	return result, err
 }
 
-func (q *notesQ) Get() (*data.Note, error) {
-	var result data.Note
-	err := q.db.Get(&result, q.sql.Where(squirrel.Eq{}))
-	if err == sql.ErrNoRows {
-		return &result, nil
+func (q *notesQ) Get() ([]data.Note, error) {
+	var result []data.Note
+	query := squirrel.Select("*").From("notes")
+
+	err := q.db.Select(&result, query)
+	if err != nil {
+		return nil, err
 	}
 
-	return &result, err
+	return result, nil
 }
 
 func (q *notesQ) Insert(notes ...data.Note) ([]string, error) {
