@@ -10,15 +10,15 @@ import (
 )
 
 func DeleteNoteHandler(w http.ResponseWriter, r *http.Request) {
-	request, err := requests.NewGetNotesRequest(r)
-	if err != nil || request == nil {
+	request, err := requests.NewDeleteNoteRequest(r)
+	if err != nil {
 		ape.RenderErr(w, problems.BadRequest(err)...)
 		return
 	}
 
-	err = ctx.NotesQ(r).Delete()
+	err = ctx.DB(r).Notes().Delete(request.ID)
 	if err != nil {
-		ctx.Log(r).WithError(err).WithField("note_id", nil).Error("failed to delete note")
+		ctx.Log(r).WithError(err).WithField("id", request.ID).Error("failed to delete note")
 		ape.RenderErr(w, problems.InternalError())
 		return
 	}
