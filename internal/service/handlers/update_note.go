@@ -1,36 +1,31 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
 	"github.com/Distributed-Lab-Testing/example-svc/internal/service/ctx"
-	"github.com/go-chi/chi"
+	"github.com/Distributed-Lab-Testing/example-svc/internal/service/requests"
+	"gitlab.com/distributed_lab/ape"
+	"gitlab.com/distributed_lab/ape/problems"
 )
 
-type NoteUpdateRequest struct {
-	ID      int64  `json:"id"`
-	Content string `json:"content"`
-}
-
 func UpdateNoteHandler(w http.ResponseWriter, r *http.Request) {
-	noteIDParam := chi.URLParam(r, "id")
-	noteID, err := strconv.ParseInt(noteIDParam, 10, 64)
+	updateReq, err := requests.NewUpdateNote(r)
 	if err != nil {
-		http.Error(w, "Invalid note ID", http.StatusBadRequest)
+		ape.RenderErr(w, problems.BadRequest(err)...)
 		return
 	}
-
-	var updateReq NoteUpdateRequest
-	if err := json.NewDecoder(r.Body).Decode(&updateReq); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+	noteID, convErr := strconv.ParseInt(updateReq.ID, 10, 64)
+	if convErr != nil {
+		ctx.Log(r).WithError(convErr).WithField("note_id", updateReq.ID).Error("invalid note ID")
+		ape.RenderErr(w, problems.BadRequest(convErr)...)
 		return
 	}
-
-	err = ctx.DB(r).Notes().UpdateContent(noteID, updateReq.Content)
+	err = ctx.DB(r).Notes().UpdateContent(noteID, updateReq.Data.Attributes.Content)
 	if err != nil {
-		http.Error(w, "Failed to update note", http.StatusInternalServerError)
+		ctx.Log(r).WithError(err).WithField("note_id", noteID).Error("failed to update note")
+		ape.RenderErr(w, problems.InternalError())
 		return
 	}
 
