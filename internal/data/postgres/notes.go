@@ -1,6 +1,8 @@
 package postgres
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/Distributed-Lab-Testing/example-svc/internal/data"
@@ -49,16 +51,14 @@ func (q *notesQ) SelectWithPageParams(pageParams pgdb.OffsetPageParams) ([]data.
 	return result, err
 }
 
-func (q *notesQ) Get() ([]data.Note, error) {
-	var result []data.Note
-	query := squirrel.Select("*").From("notes")
-
-	err := q.db.Select(&result, query)
-	if err != nil {
-		return nil, err
+func (q *notesQ) Get(id int64) (*data.Note, error) {
+	var result data.Note
+	err := q.db.Get(&result, q.sql.Where(squirrel.Eq{notesId: id}))
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
 	}
 
-	return result, nil
+	return &result, err
 }
 
 func (q *notesQ) Insert(notes ...data.Note) ([]string, error) {
@@ -78,16 +78,20 @@ func (q *notesQ) Insert(notes ...data.Note) ([]string, error) {
 	return ids, q.db.Select(&ids, query)
 }
 
-func (q *notesQ) Delete() error {
-	statement := squirrel.Delete(notesTable).Where(squirrel.Eq{})
+func (q *notesQ) Delete(id int64) error {
+	statement := squirrel.Delete(notesTable).Where(squirrel.Eq{notesId: id})
 	return q.db.Exec(statement)
 }
 
 func (q *notesQ) UpdateContent(id int64, newContent string) error {
-	statement := squirrel.Update(notesTable).
-		Set(newContent).
-		Where(squirrel.Eq{notesId: id})
-	return q.db.Exec(statement)
+	sqlizer := squirrel.Update(notesTable).Set("content", newContent).Where(squirrel.Eq{"id": id})
+
+	err := q.db.Exec(&sqlizer)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func applyNotesSelector(sql squirrel.SelectBuilder, selector data.NoteSelector) squirrel.SelectBuilder {
@@ -97,9 +101,6 @@ func applyNotesSelector(sql squirrel.SelectBuilder, selector data.NoteSelector) 
 	}
 	if len(selector.Content) > 0 {
 		sql = sql.Where(squirrel.Eq{notesContent: selector.Content})
-	}
-	if selector.CreatedFrom != nil {
-		sql = sql.Where(squirrel.GtOrEq{notesCreatedAt: selector.CreatedFrom})
 	}
 
 	return sql
