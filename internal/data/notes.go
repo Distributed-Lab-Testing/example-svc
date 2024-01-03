@@ -6,22 +6,20 @@ import (
 	"gitlab.com/distributed_lab/kit/pgdb"
 )
 
-//go:generate mockery --case underscore --name KycFlowsQ
 type NotesQ interface {
 	New() NotesQ
 	Insert(notes ...Note) ([]string, error)
 	Select(selector NoteSelector) ([]Note, error)
-	Get() ([]Note, error)
-	Delete() error
+	Get(id int64) (*Note, error)
+	Delete(id int64) error
 	UpdateContent(id int64, newContent string) error
 }
 
 type NoteSelector struct {
-	PageParams   pgdb.OffsetPageParams
-	ID           []int64
-	Content      []string
-	CreatedFrom  *time.Time
-	CreatedUntil *time.Time
+	PageParams pgdb.OffsetPageParams
+	ID         []int64
+	Content    []string
+	CreatedAt  []string
 }
 
 type Note struct {
