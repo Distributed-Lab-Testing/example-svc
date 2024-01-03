@@ -9,13 +9,39 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-type UpdateUser struct {
-	ID   string
+type UpdateNoteRequest struct {
+	ID   string         //`json:"-"`
 	Data resources.Note `json:"data"`
 }
 
-func NewUpdateUser(r *http.Request) (UpdateUser, error) {
-	request := UpdateUser{
+// func NewUpdateNote(r *http.Request) (UpdateNoteRequest, error) {
+// 	noteIDParam := chi.URLParam(r, "id")
+// 	noteID, err := strconv.ParseInt(noteIDParam, 10, 64)
+
+// 	if err != nil {
+// 		return UpdateNoteRequest{}, err
+// 	}
+
+// 	request := UpdateNoteRequest{
+// 		ID: noteID,
+// 	}
+
+// 	if err := json.NewDecoder(r.Body).Decode(&request.Data); err != nil {
+// 		return request, err
+// 	}
+
+// 	return request, request.validate()
+// }
+
+// func (r UpdateNoteRequest) validate() error {
+// 	return validation.ValidateStruct(&r,
+// 		validation.Field(&r.ID, validation.Required),
+// 		validation.Field(&r.Data.Attributes.Content, validation.Required),
+// 	)
+// }
+
+func NewUpdateNote(r *http.Request) (UpdateNoteRequest, error) {
+	request := UpdateNoteRequest{
 		ID: chi.URLParam(r, "id"),
 	}
 
@@ -26,11 +52,12 @@ func NewUpdateUser(r *http.Request) (UpdateUser, error) {
 	return request, nil
 }
 
-func (r UpdateUser) validate() error {
+func (r UpdateNoteRequest) validate() error {
 	return validation.Errors{
-		"id": validation.Validate(
+		"user_id": validation.Validate(
 			&r.ID,
 			validation.Required,
+			// is.UUID,
 		),
 	}.Filter()
 }
