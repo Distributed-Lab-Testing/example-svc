@@ -21,9 +21,10 @@ func (s *service) router() chi.Router {
 	r.Route("/integrations/example-svc", func(r chi.Router) {
 		r.Route("/notes", func(r chi.Router) {
 			r.Post("/", handlers.CreateNoteHandler) // CRUD Create
-			r.Get("/", handlers.GetNoteHandler)     // CRUD Read
+			r.Get("/", handlers.ListNotesHandler)   // CRUD Get as a list
 			r.Route("/{id}", func(r chi.Router) {
-				r.Put("/", handlers.UpdateNoteHandler)    // CRUD Update
+				r.Get("/", handlers.GetNoteHandler)       // CRUD GET
+				r.Patch("/", handlers.UpdateNoteHandler)  // CRUD Update
 				r.Delete("/", handlers.DeleteNoteHandler) // CRUD Delete
 			})
 		})
