@@ -60,6 +60,7 @@ You can [install it locally](https://www.postgresql.org/download/) or use [docke
 
 ### Third-party services
 
+Third-party services are not used.
 
 ## Contact
 
