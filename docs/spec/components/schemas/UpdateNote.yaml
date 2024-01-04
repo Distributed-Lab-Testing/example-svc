@@ -8,7 +8,6 @@ allOf:
         type: object
         required:
           - content
-          - created_at
         properties:
           content:
             description: Content to share
@@ -17,5 +16,4 @@ allOf:
           created_at:
             description: Timestamp that shows when user was created.
             type: string
-            format: time.Time
-            example: 2023-11-12T17:28:38.541Z
+            format: time.Now()
