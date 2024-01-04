@@ -16,10 +16,10 @@ func UpdateNoteHandler(w http.ResponseWriter, r *http.Request) {
 		ape.RenderErr(w, problems.BadRequest(err)...)
 		return
 	}
-	noteID, convErr := strconv.ParseInt(updateReq.ID, 10, 64)
-	if convErr != nil {
-		ctx.Log(r).WithError(convErr).WithField("note_id", updateReq.ID).Error("invalid note ID")
-		ape.RenderErr(w, problems.BadRequest(convErr)...)
+	noteID, err := strconv.ParseInt(updateReq.ID, 10, 64)
+	if err != nil {
+		ctx.Log(r).WithError(err).WithField("note_id", updateReq.ID).Error("invalid note ID")
+		ape.RenderErr(w, problems.BadRequest(err)...)
 		return
 	}
 	err = ctx.DB(r).Notes().UpdateContent(noteID, updateReq.Data.Attributes.Content)
