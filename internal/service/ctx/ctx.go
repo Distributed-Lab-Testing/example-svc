@@ -2,7 +2,6 @@ package ctx
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/Distributed-Lab-Testing/example-svc/internal/data"
@@ -32,20 +31,6 @@ func CtxLog(entry *logan.Entry) func(context.Context) context.Context {
 
 func Log(r *http.Request) *logan.Entry {
 	return r.Context().Value(logCtxKey).(*logan.Entry)
-}
-
-func NotesQ(r *http.Request) (data.NotesQ, error) {
-	v := r.Context().Value(notesCtxKey)
-	if v == nil {
-		return nil, errors.New("NotesQ not found in request context")
-	}
-
-	notesQ, ok := v.(data.NotesQ)
-	if !ok {
-		return nil, errors.New("context value is not of type data.NotesQ")
-	}
-
-	return notesQ, nil
 }
 
 func CtxDB(entry data.DB) func(context.Context) context.Context {
