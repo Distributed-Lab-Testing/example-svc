@@ -31,34 +31,6 @@ get:
         type: string
         description: UUID of the user to filter logs
         example: 550e8400-e29b-41d4-a716-446655440000
-    - name: 'filter[categories]'
-      in: query
-      required: false
-      schema:
-        type: string
-        description: Categories to filter by. Can handle either single or multiple values.
-        example: 'login attempts,database changes'
-    - name: 'filter[statuses]'
-      in: query
-      required: false
-      schema:
-        type: string
-        description: statuses to filter by. Can handle either single or multiple values.
-        example: '0,1'
-    - name: 'filter[after]'
-      in: query
-      required: false
-      schema:
-        type: string
-        description: timestamp to filter created dates after this value
-        example: '2023-09-15T07:59:36Z'
-    - name: 'filter[before]'
-      in: query
-      required: false
-      schema:
-        type: string
-        description: timestamp to filter created dates before this value
-        example: '2023-09-15T07:59:36Z'
   tags:
     - Notes
   summary: Get notes
@@ -77,4 +49,4 @@ get:
                 type: array
                 items:
                   type: object
-                  $ref: '#/components/schemas/Log'
+                  $ref: '#/components/schemas/Note'
