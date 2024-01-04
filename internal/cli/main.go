@@ -8,6 +8,17 @@ import (
 	"gitlab.com/distributed_lab/logan/v3"
 )
 
+var (
+	app = kingpin.New("example-svc", "Example service for demonstration purposes. Manages notes in the database")
+
+	runCmd     = app.Command("run", "run command")
+	serviceCmd = runCmd.Command("service", "run service's API")
+
+	migrateCmd     = app.Command("migrate", "migrate command")
+	migrateUpCmd   = migrateCmd.Command("up", "migrate database up")
+	migrateDownCmd = migrateCmd.Command("down", "migrate database down")
+)
+
 func Run(args []string) bool {
 	log := logan.New()
 
@@ -19,17 +30,6 @@ func Run(args []string) bool {
 
 	cfg := config.New(kv.MustFromEnv())
 	log = cfg.Log()
-
-	app := kingpin.New("example-svc", "")
-
-	runCmd := app.Command("run", "run command")
-	serviceCmd := runCmd.Command("service", "run service") // you can insert custom help
-
-	migrateCmd := app.Command("migrate", "migrate command")
-	migrateUpCmd := migrateCmd.Command("up", "migrate db up")
-	migrateDownCmd := migrateCmd.Command("down", "migrate db down")
-
-	// custom commands go here...
 
 	cmd, err := app.Parse(args[1:])
 	if err != nil {
@@ -44,7 +44,6 @@ func Run(args []string) bool {
 		err = MigrateUp(cfg)
 	case migrateDownCmd.FullCommand():
 		err = MigrateDown(cfg)
-	// handle any custom commands here in the same way
 	default:
 		log.Errorf("unknown command %s", cmd)
 		return false
