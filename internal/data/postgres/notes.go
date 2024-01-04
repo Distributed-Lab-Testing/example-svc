@@ -84,14 +84,14 @@ func (q *notesQ) Delete(id int64) error {
 }
 
 func (q *notesQ) UpdateContent(id int64, newContent string) error {
-	sqlizer := squirrel.Update(notesTable).Set("content", newContent).Where(squirrel.Eq{"id": id})
+	statement := squirrel.Update(notesTable).Set(notesContent, newContent).Where(squirrel.Eq{notesId: id})
 
-	err := q.db.Exec(&sqlizer)
+	err := q.db.Exec(&statement)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	return q.db.Exec(&statement)
 }
 
 func applyNotesSelector(sql squirrel.SelectBuilder, selector data.NoteSelector) squirrel.SelectBuilder {
