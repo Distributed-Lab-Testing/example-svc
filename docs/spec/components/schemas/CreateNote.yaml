@@ -18,5 +18,4 @@ allOf:
           created_at:
             description: A time when the note was created
             type: string
-            format: time.Time
-            example: 2023-09-15T07:59:36.000Z
+            format: time.Now()
