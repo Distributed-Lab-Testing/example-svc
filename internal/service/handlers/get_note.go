@@ -19,7 +19,7 @@ func GetNoteHandler(w http.ResponseWriter, r *http.Request) {
 
 	entry, err := ctx.DB(r).Notes().Get(request.ID)
 	if err != nil {
-		ctx.Log(r).WithError(err).Error("failed to get note flow entry from the database")
+		ctx.Log(r).WithError(err).Error("failed to get note entry from the database")
 		ape.Render(w, problems.InternalError())
 		return
 	}
