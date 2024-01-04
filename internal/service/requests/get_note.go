@@ -14,7 +14,7 @@ type GetNotesRequest struct {
 
 func NewGetNotesRequest(r *http.Request) (*GetNotesRequest, error) {
 	idStr := chi.URLParam(r, "id")
-	if idStr == "" {
+	if len(idStr) == 0 {
 		return nil, errors.New("no note ID provided")
 	}
 	id, err := strconv.ParseInt(idStr, 10, 64)
