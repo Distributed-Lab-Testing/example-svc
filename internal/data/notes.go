@@ -8,7 +8,7 @@ import (
 
 type NotesQ interface {
 	New() NotesQ
-	Insert(notes ...Note) ([]string, error)
+	Insert(notes ...Note) ([]int64, error)
 	Select(selector NoteSelector) ([]Note, error)
 	Get(id int64) (*Note, error)
 	Delete(id int64) error
