@@ -61,12 +61,12 @@ func (q *notesQ) Get(id int64) (*data.Note, error) {
 	return &result, err
 }
 
-func (q *notesQ) Insert(notes ...data.Note) ([]string, error) {
+func (q *notesQ) Insert(notes ...data.Note) ([]int64, error) {
 	if len(notes) == 0 {
 		return nil, nil
 	}
 
-	ids := make([]string, 0)
+	ids := make([]int64, 0)
 
 	query := squirrel.Insert(notesTable).Columns(notesColumns...)
 	for _, note := range notes {
@@ -74,7 +74,6 @@ func (q *notesQ) Insert(notes ...data.Note) ([]string, error) {
 	}
 
 	query = query.Suffix("returning id")
-
 	return ids, q.db.Select(&ids, query)
 }
 
