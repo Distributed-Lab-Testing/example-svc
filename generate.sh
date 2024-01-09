@@ -3,8 +3,8 @@
 GENERATOR_IMAGE=tokend/openapi-generator:v0.1.0
 
 
-GENERATED="${GOPATH}/src/github.com/Distributed-Lab-Testing/example-svc/resources"
-OPENAPI_DIR="${GOPATH}/src/github.com/Distributed-Lab-Testing/example-svc/docs/web_deploy"
+GENERATED="${GOPATH}/home/user/Tasks/Distributed-Lab-Testing/example-svc/resources"
+OPENAPI_DIR="${GOPATH}/home/user/Tasks/Distributed-Lab-Testing/example-svc/docs/web_deploy"
 PACKAGE_NAME=resources
 
 function printHelp {

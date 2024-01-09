@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/Distributed-Lab-Testing/example-svc/internal/data"
 	"github.com/Distributed-Lab-Testing/example-svc/internal/service/ctx"
@@ -21,7 +22,7 @@ func CreateNoteHandler(w http.ResponseWriter, r *http.Request) {
 
 	ids, err := ctx.DB(r).Notes().Insert(data.Note{
 		Content:   request.Data.Attributes.Content,
-		CreatedAt: request.Data.Attributes.CreatedAt,
+		CreatedAt: time.Now(),
 	})
 	if err != nil {
 		ctx.Log(r).WithError(err).Error("failed to insert new note")
