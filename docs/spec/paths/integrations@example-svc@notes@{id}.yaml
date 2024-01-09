@@ -1,0 +1,41 @@
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: '10'
+      description: Account id
+patch:
+  tags:
+    - Notes
+  summary: Update notes
+  operationId: updateNote
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              $ref: '#/components/schemas/UpdateNote'
+  responses:
+    '200':
+      description: successfully updated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/UpdateNote'
+delete:
+  tags:
+    - Notes
+  summary: Delete notes
+  operationId: deleteNote
+  responses:
+    '204':
+      description: successfully deleted

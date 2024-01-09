@@ -1,0 +1,19 @@
+allOf:
+  - $ref: '#/components/schemas/UpdateNoteKey'
+  - type: object
+    required:
+      - attributes
+    properties:
+      attributes:
+        type: object
+        required:
+          - content
+        properties:
+          content:
+            description: Content to share
+            type: string
+            example: Hello world
+          created_at:
+            description: Timestamp that shows when user was created.
+            type: string
+            format: time.Now()

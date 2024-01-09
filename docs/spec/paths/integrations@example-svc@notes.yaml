@@ -1,0 +1,52 @@
+post:
+  tags:
+    - Notes
+  summary: Create notes
+  operationId: CreateNote
+  description: |
+    Writing data to the database.
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - data
+          properties:
+            data:
+              type: object
+              $ref: '#/components/schemas/CreateNote'
+  responses:
+    '201':
+      description: Successfully created note
+get:
+  parameters:
+    - $ref: '#/components/parameters/sortingParam'
+    - $ref: '#/components/parameters/pageNumberParam'
+    - $ref: '#/components/parameters/pageLimitParam'
+    - name: 'filter[id]'
+      in: query
+      required: false
+      schema:
+        type: string
+        description: UUID of the user to filter logs
+        example: 550e8400-e29b-41d4-a716-446655440000
+  tags:
+    - Notes
+  summary: Get notes
+  operationId: getNotes
+  description: |
+    Getting data to the database.
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  $ref: '#/components/schemas/Note'
